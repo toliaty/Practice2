@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+    <head>
+        <title>Test</title>
+        <script type = "text/javascript" src = "jquery-3.6.1.min.js"></script>
+        <script type = "text/javascript">
+            var noSupportMessage = "Ваш браузер не поддерживает WebSocket!";
+            var ws;
+
+            function appendMessage(message) {
+                $('body').append(message);
+            }
+
+            function connectSocketServer() {
+                var support = "MozWebSocket" in window ? 'MozWebSocket' : ("WebSocket" in window ? 'WebSocket' : null);
+
+                if (support == null) {
+                    appendMessage("* " + noSupportMessage + "<br/>");
+                    return;
+                }
+
+                appendMessage("********** Подключение к серверу **********<br/>");
+                ws = new window[support]('ws://localhost:2012/');
+
+                ws.onmessage = function (evt) {
+                    appendMessage("# " + evt.data + "<br />");
+                };
+
+                ws.onopen = function () {
+                    appendMessage('* Соединение открыто<br/>');
+                    $('#messageInput').attr("disabled", false);
+                    $('#sendButton').attr("disabled", false);
+                    $('#connectButton').attr("disabled", "disabled");
+                    $('#disconnectButton').attr("disabled", false);
+                };
+
+                ws.onclose = function () {
+                    appendMessage('* Соединение закрыто<br/>');
+                    $('#messageInput').attr("disabled", "disabled");
+                    $('#sendButton').attr("disabled", "disabled");
+                    $('#connectButton').attr("disabled", false);
+                    $('#disconnectButton').attr("disabled", "disabled");
+                }
+            }
+
+            function sendMessage() {
+                if (ws) {
+                    var messageBox = document.getElementById('messageInput');
+                    ws.send(messageBox.value);
+                    messageBox.value = "";
+                }
+            }
+
+            function disconnectWebSocket() {
+                if (ws) {
+                    ws.close();
+                }
+            }
+
+            function connectWebSocket() {
+                connectSocketServer();
+            }
+
+            window.onload = function () {
+                $('#messageInput').attr("disabled", "disabled");
+                $('#sendButton').attr("disabled", "disabled");
+                $('#disconnectButton').attr("disabled", "disabled");
+            }
+
+    </script>
+    </head>
+    <body>
+        <input type="button" id = "connectButton" value="Подключиться к серверу" onclick = "connectWebSocket()"/> 
+        <input type="button" id = "disconnectButton" value="Отключиться" onclick = "disconnectWebSocket()"/> 
+        <input type="text" id = "messageInput"/> 
+        <input type="button" id = "sendButton" value="Отправить" onclick = "sendMessage()"/> <br />
+    </body>
+</html>
