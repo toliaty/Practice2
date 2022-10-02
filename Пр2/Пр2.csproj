@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SuperWebSocketNETServer" Version="0.8.0" />
+    <PackageReference Include="System.Configuration.Abstractions" Version="2.0.2.45" />
+  </ItemGroup>
+
+</Project>
